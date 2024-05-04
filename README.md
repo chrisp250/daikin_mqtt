@@ -20,7 +20,6 @@ Installation steps are very simple:
 mqtt:
   - climate:
       name: Studio Climate
-      unique_id: studioac
       modes:
         - "off"
         - "cool"
@@ -34,3 +33,13 @@ mqtt:
       mode_state_topic: "climate/studio/mode"
       precision: 0.5
 ```
+
+# Missing
+The integration currently only reads data from the AC unit and pushes it to MQTT, no controls are implemented at this stage.  
+The parameters it reads are:
+- Unit mode (off, heating, cooling, fan, dry, auto)
+- Room temperature
+- Room humidity
+- Temperature setpoint (when in heating or cooling mode)
+
+Enjoy!

@@ -1,4 +1,4 @@
-# MQTT integration for Daikin airconditooners
+# MQTT integration for Daikin airconditoners
 I developed this integration to get my AC to work again with Home Assistant after Daikin upgraded the firmware to 2.8.0 and the native integration no longer works.  
 This is fairly limited at the moment but it works
 

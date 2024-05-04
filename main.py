@@ -15,15 +15,47 @@ ac_address = config['unit']['ip']
 #Define Daikin class
 aircon = daikin.Daikin(ac_address)
 
-#def on_publish(client, userdata, mid):
+#Publish succeeded
 def on_publish(client, userdata, mid, reason_code, properties):
 #    print("sent a message")
     exit
 
+# Subscribed to a new topic
+def on_subscribe(client, userdata, mid, reason_code_list, properties):
+    # Since we subscribed only for a single channel, reason_code_list contains
+    # a single entry
+    if reason_code_list[0].is_failure:
+        #print(f"Broker rejected you subscription: {reason_code_list[0]}")
+        exit
+    else:
+        #print(f"Broker granted the following QoS: {reason_code_list[0].value}")
+        exit
+
+#Message received
+def on_message(client, userdata, message):
+    #print("Topic:", message.topic," Payload:",message.payload)
+    if message.topic == (base_topic+'/modecommand'): #Is it a mode change message
+        match str(message.payload.decode("utf-8")):
+            case "cool":
+                aircon.switch_mode("cool")
+            case "dry":
+                 aircon.switch_mode("dry")
+            case "heat":
+                aircon.switch_mode("heat")
+            case "fan_only":
+                aircon.switch_mode("fan_only")
+            case "auto":
+                aircon.switch_mode("auto")
+            case "off":
+                aircon.switch_mode("off")
 
 mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, "daikin_studio")
 mqttClient.on_publish = on_publish
+mqttClient.on_message = on_message
+mqttClient.on_subscribe = on_subscribe
 mqttClient.connect(mqtt_server, mqtt_port)
+
+mqttClient.subscribe(base_topic+'/modecommand')
 # start a new thread
 mqttClient.loop_start()
 

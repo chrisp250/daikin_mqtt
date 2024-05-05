@@ -1,6 +1,6 @@
 # MQTT integration for Daikin airconditoners
 I developed this integration to get my AC to work again with Home Assistant after Daikin upgraded the firmware to 2.8.0 and the native integration no longer works.  
-This is fairly limited at the moment but it works
+This is fairly basic at the moment but I'm hoping it fills the gap while a more polished solution is available
 
 
 # Requirements
@@ -31,12 +31,13 @@ mqtt:
       current_temperature_topic: "climate/studio/temperature"
       temperature_state_topic: "climate/studio/temperaturesp"
       mode_state_topic: "climate/studio/mode"
+      mode_command_topic: "climate/studio/modecommand"
       precision: 0.5
 ```
 
 # Missing
-The integration currently only reads data from the AC unit and pushes it to MQTT, no controls are implemented at this stage.  
-The parameters it reads are:
+The integration reads data from the AC unit and pushes it to MQTT, controls controls functionality is limited to switching the unit to different modes: off,fan,heat,cool,auto,dry.  
+The parameters it reads from the unit are:
 - Unit mode (off, heating, cooling, fan, dry, auto)
 - Room temperature
 - Room humidity

@@ -48,22 +48,16 @@ def on_message(client, userdata, message):
                 aircon.switch_mode("auto")
             case "off":
                 aircon.switch_mode("off")
+#    update_request()
 
-mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, "daikin_studio")
-mqttClient.on_publish = on_publish
-mqttClient.on_message = on_message
-mqttClient.on_subscribe = on_subscribe
-mqttClient.connect(mqtt_server, mqtt_port)
-
-mqttClient.subscribe(base_topic+'/modecommand')
-# start a new thread
-mqttClient.loop_start()
-
-# Why use msg.encode('utf-8') here
-# MQTT is a binary based protocol where the control elements are binary bytes and not text strings.
-# Topic names, Client ID, Usernames and Passwords are encoded as stream of bytes using UTF-8.
-while True:
-    aircon.get_status()
+#Request an update on AC status
+def update_request():
+    while not aircon.get_status():
+        time.sleep(30)
+    #print("Polling...")
+    # Why use msg.encode('utf-8') here
+    # MQTT is a binary based protocol where the control elements are binary bytes and not text strings.
+    # Topic names, Client ID, Usernames and Passwords are encoded as stream of bytes using UTF-8.
     msg = aircon.mode
     info = mqttClient.publish(
         topic=base_topic+'/mode',
@@ -85,11 +79,22 @@ while True:
         payload=aircon.humidity,
         qos=0,
     )
-
-
     # Because published() is not synchronous,
     # it returns false while he is not aware of delivery that's why calling wait_for_publish() is mandatory.
     info.wait_for_publish()
     #print(info.is_published())
-    
-    time.sleep(60)
+
+
+mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, "daikin_studio")
+mqttClient.on_publish = on_publish
+mqttClient.on_message = on_message
+mqttClient.on_subscribe = on_subscribe
+mqttClient.connect(mqtt_server, mqtt_port)
+
+mqttClient.subscribe(base_topic+'/modecommand')
+# start a new thread
+mqttClient.loop_start()
+
+while True:
+    update_request()
+    time.sleep(30)

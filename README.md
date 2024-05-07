@@ -15,6 +15,13 @@ Installation steps are very simple:
 - Update the ini file to suit your install
 - Run `python3 main.py`
 
+# Docker build
+Build the image:
+- `docker build -t daikin_mqtt .`
+Run the image:
+- Update the daikin.ini file to suit your install
+- `docker run -d -v $(pwd)/daikin.ini:/usr/src/app/daikin.ini daikin_mqtt`
+
 # Sample MQTT config in Home Assistant
 ```
 mqtt:

@@ -163,15 +163,15 @@ class Daikin:
             case '"0A00"': #auto
                 return "auto"
             case '"0B00"': #quiet
-                return "low"
+                return "Quiet"
             case '"0300"': #1
-                return "low"
+                return "1"
             case '"0400"': #2
-                return "medium"
+                return "2"
             case '"0500"': #3
-                return "medium"
+                return "3"
             case '"0600"': #4
-                return "high"
+                return "4"
             case '"0700"': #5
-                return "high"
+                return "5"
             

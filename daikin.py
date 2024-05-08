@@ -38,17 +38,22 @@ class Daikin:
         match p["p_01"]:
             case '"0000"':
                 self.mode = "fan_only"
+                self.fanmode = self.get_fanmode(p["p_28"])                
             case '"0100"':
                 self.mode = "heat"
+                self.fanmode = self.get_fanmode(p["p_0A"])
                 self.temperaturesp = int(p["p_03"].strip('"'), 16)/2
             case '"0200"':
                 self.mode = "cool"
+                self.fanmode = self.get_fanmode(p["p_09"])
                 self.temperaturesp = int(p["p_02"].strip('"'), 16)/2
             case '"0300"':
                 self.mode = "auto"
+                self.fanmode = self.get_fanmode(p["p_26"])                
                 self.temperaturesp = int(p["p_1F"].strip('"'),16)
             case '"0500"':                
                 self.mode = "dry"
+                self.fan = self.get_fanmode(p["p_27"])                
         if e_A002[2] == '0': # Unit is turned off
             self.mode = "off"
 
@@ -149,3 +154,24 @@ class Daikin:
             case '"0500"': #Dehumidifier mode
                 print("/ Dehumidifier mode  Attributes:", end = " ")
                 print(p["p_22"],p["p_23"],p["p_27"])
+
+    #Fan mode
+    #Air volume of air conditioning 
+    #0A00: automatic, 0B00: quiet, 0300: air volume 1, 0400: air volume 2, 0500: air volume 3, 0600: air volume 4, 0700: air volume 5
+    def get_fanmode(self,mode):
+        match mode:
+            case '"0A00"': #auto
+                return "auto"
+            case '"0B00"': #quiet
+                return "low"
+            case '"0300"': #1
+                return "low"
+            case '"0400"': #2
+                return "medium"
+            case '"0500"': #3
+                return "medium"
+            case '"0600"': #4
+                return "high"
+            case '"0700"': #5
+                return "high"
+            

@@ -36,7 +36,7 @@ mqtt:
         - "fan_only"
         - "auto"
       fan_modes:
-        - "Auto"
+        - "auto"
         - "Quiet"
         - "1"
         - "2"

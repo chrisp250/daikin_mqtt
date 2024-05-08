@@ -63,3 +63,8 @@ The parameters it reads from the unit are:
 - Fan mode: (auto, quiet, 1, 2, 3, 4, 5)
 
 Enjoy!
+
+# Ask
+If you find my app useful, please consider upvoting my [feauture request](https://community.home-assistant.io/t/request-for-expiry-after-option-in-mqtt-hvac-integration/726390) for an `expiry_after` option for the MQTT HVAC integration for Home Assistant.  
+This will allow Home Assistant show the device offline if it stops receiving updates for a period of time.  
+Thank you

@@ -79,6 +79,11 @@ def update_request():
         payload=aircon.humidity,
         qos=0,
     )
+    info = mqttClient.publish(
+        topic=base_topic+'/fanmode',
+        payload=aircon.fanmode,
+        qos=0,
+    )
     # Because published() is not synchronous,
     # it returns false while he is not aware of delivery that's why calling wait_for_publish() is mandatory.
     info.wait_for_publish()

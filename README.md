@@ -34,12 +34,22 @@ mqtt:
         - "dry"
         - "heat"
         - "fan_only"
+        - "auto"
+      fan_modes:
+        - "auto"
+        - "Quiet"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"        
       temperature_command_topic: "climate/studio/settemperature"
       current_humidity_topic: "climate/studio/humidity"
       current_temperature_topic: "climate/studio/temperature"
       temperature_state_topic: "climate/studio/temperaturesp"
       mode_state_topic: "climate/studio/mode"
       mode_command_topic: "climate/studio/modecommand"
+      fan_mode_state_topic: "climate/studio/fanmode"
       precision: 0.5
 ```
 

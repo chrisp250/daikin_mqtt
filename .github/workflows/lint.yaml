@@ -1,0 +1,27 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  lint:
+    name: Lint add-on daikin-mqtt
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v3.0.2
+
+      - name: 🚀 Run Home Assistant Add-on Lint
+        uses: frenck/action-addon-linter@v2.15
+        with:
+          path: "./"
+
+
+

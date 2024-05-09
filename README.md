@@ -2,6 +2,8 @@
 I developed this integration to get my AC to work again with Home Assistant after Daikin upgraded the firmware to 2.8.0 and the native integration no longer works.  
 This is fairly basic at the moment but I'm hoping it fills the gap while a more polished solution is available
 
+[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Ffoxdalas%2Fdaikin_mqtt)
+
 
 # Requirements
 These python packages are required for the code to work:

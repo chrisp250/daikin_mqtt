@@ -1,11 +1,23 @@
 import time
 import paho.mqtt.client as mqtt
-import configparser
+import yaml
 import daikin
+import os
+import sys
+
+# Check CONFIG_PATH environment variable
+if 'CONFIG_PATH' in os.environ:
+    print("CONFIG_PATH environment variable is set to:", os.environ['CONFIG_PATH'])
+    configPath = os.environ['CONFIG_PATH']
+else:
+    print("CONFIG_PATH environment variable is not set. Using default config...")
+    configPath = "daikin.yaml"
+
+print("Starting Daikin MQTT with config:", configPath)
 
 #Configuration file reader
-config = configparser.ConfigParser()
-config.read("daikin.ini")
+with open(configPath) as f:
+    config = yaml.load(f, Loader=yaml.FullLoader)
 
 mqtt_server=config['mqtt']['server']
 mqtt_port=int(config['mqtt']['port'])
@@ -13,6 +25,10 @@ mqtt_username = config['mqtt']['username']
 mqtt_password = config['mqtt']['password']
 base_topic = config['mqtt']['base_topic']
 ac_address = config['unit']['ip']
+
+if ac_address is None:
+    print("AC IP address is not set in config file")
+    sys.exit(1)
 
 #Define Daikin class
 aircon = daikin.Daikin(ac_address)
@@ -35,7 +51,7 @@ def on_subscribe(client, userdata, mid, reason_code_list, properties):
 
 #Message received
 def on_message(client, userdata, message):
-    
+
     #print("Topic:", message.topic," Payload:",message.payload)
     if message.topic == (base_topic+'/modecommand'): #Is it a mode change message
         print ("Set mode:",str(message.payload.decode("utf-8")))
@@ -102,7 +118,7 @@ mqttClient.on_publish = on_publish
 mqttClient.on_message = on_message
 mqttClient.on_subscribe = on_subscribe
 
-if len(mqtt_username)>0 and len(mqtt_password)>0:
+if mqtt_username is not None and mqtt_password is not None:
     mqttClient.username_pw_set(mqtt_username, mqtt_password)
 
 mqttClient.connect(mqtt_server, mqtt_port)

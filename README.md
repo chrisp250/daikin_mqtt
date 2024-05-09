@@ -50,6 +50,7 @@ mqtt:
       mode_state_topic: "climate/studio/mode"
       mode_command_topic: "climate/studio/modecommand"
       fan_mode_state_topic: "climate/studio/fanmode"
+      temperature_command_topic: "climate/studio/temperaturecommand"
       precision: 0.5
 ```
 

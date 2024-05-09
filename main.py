@@ -1,4 +1,4 @@
-import time
+      import time
 import paho.mqtt.client as mqtt
 import configparser
 import daikin
@@ -33,8 +33,10 @@ def on_subscribe(client, userdata, mid, reason_code_list, properties):
 
 #Message received
 def on_message(client, userdata, message):
+    
     #print("Topic:", message.topic," Payload:",message.payload)
     if message.topic == (base_topic+'/modecommand'): #Is it a mode change message
+        print ("Set mode:",str(message.payload.decode("utf-8")))
         match str(message.payload.decode("utf-8")):
             case "cool":
                 aircon.switch_mode("cool")
@@ -48,12 +50,15 @@ def on_message(client, userdata, message):
                 aircon.switch_mode("auto")
             case "off":
                 aircon.switch_mode("off")
+    elif message.topic == (base_topic+'/temperaturecommand'): #Is it a temperature change message
+        print ("Set temperature:",str(message.payload.decode("utf-8")))
+        aircon.set_temp(message.payload.decode("utf-8"))
 #    update_request()
 
 #Request an update on AC status
 def update_request():
     while not aircon.get_status():
-        time.sleep(30)
+        time.sleep(30) #Wait if can't connect to AC unit and retry
     #print("Polling...")
     # Why use msg.encode('utf-8') here
     # MQTT is a binary based protocol where the control elements are binary bytes and not text strings.
@@ -97,6 +102,7 @@ mqttClient.on_subscribe = on_subscribe
 mqttClient.connect(mqtt_server, mqtt_port)
 
 mqttClient.subscribe(base_topic+'/modecommand')
+mqttClient.subscribe(base_topic+'/temperaturecommand')
 # start a new thread
 mqttClient.loop_start()
 

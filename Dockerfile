@@ -1,9 +1,10 @@
-FROM python:alpine
-WORKDIR /usr/src/app
+ARG BUILD_FROM
+FROM $BUILD_FROM
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+COPY rootfs /
 
-COPY . .
+WORKDIR /app
 
-CMD [ "python", "./main.py" ]
+COPY main.py daikin.py requirements.txt . 
+RUN pip3 install --no-cache-dir --prefer-binary -r requirements.txt
+

@@ -1,0 +1,28 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Start the daikin mqtt
+# s6-overlay docs: https://github.com/just-containers/s6-overlay
+# ==============================================================================
+
+export DATA_PATH="/config"
+export CONFIG_PATH="$DATA_PATH/configuration.yaml"
+
+if ! bashio::fs.file_exists $CONFIG_PATH; then
+    mkdir -p "$DATA_PATH" || bashio::exit.nok "Could not create $DATA_PATH"
+
+    cat <<EOF > $CONFIG_PATH
+general:
+mqtt:
+  base_topic: 'climate/studio'
+  server: '127.0.0.1'
+  username: ''
+  password: ''
+  port: 1883
+unit:
+  ip:
+EOF
+fi
+
+bashio::log.info "Starting Daikin MQTT..."
+
+exec python3 /app/main.py

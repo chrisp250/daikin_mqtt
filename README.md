@@ -63,7 +63,7 @@ The parameters it reads from the unit are:
 - Temperature setpoint (when in heating or cooling mode)
 - Fan mode: (auto, quiet, 1, 2, 3, 4, 5)
 
-Controls controls functionality is limited to switching the unit to different modes: off,fan,heat,cool,auto,dry, and setting the temperature only when in heating or cooling more at this stage.
+Controls functionality is limited to switching the unit to different modes: off,fan,heat,cool,auto,dry, and setting the temperature only when in heating or cooling mode at this stage.
 Enjoy!
 
 # Ask

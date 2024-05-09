@@ -54,7 +54,7 @@ mqtt:
 ```
 
 # What's implemented
-The integration reads data from the AC unit and pushes it to MQTT. Controls controls functionality is limited to switching the unit to different modes: off,fan,heat,cool,auto,dry.  
+The integration reads data from the AC unit and pushes it to MQTT.  
 The parameters it reads from the unit are:
 - Unit mode (off, heating, cooling, fan, dry, auto)
 - Room temperature
@@ -62,6 +62,7 @@ The parameters it reads from the unit are:
 - Temperature setpoint (when in heating or cooling mode)
 - Fan mode: (auto, quiet, 1, 2, 3, 4, 5)
 
+Controls controls functionality is limited to switching the unit to different modes: off,fan,heat,cool,auto,dry, and setting the temperature only when in heating or cooling more at this stage.
 Enjoy!
 
 # Ask

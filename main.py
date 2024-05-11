@@ -1,4 +1,4 @@
-      import time
+import time
 import paho.mqtt.client as mqtt
 import configparser
 import daikin
@@ -9,6 +9,8 @@ config.read("daikin.ini")
 
 mqtt_server=config['mqtt']['server']
 mqtt_port=int(config['mqtt']['port'])
+mqtt_username = config['mqtt']['username']
+mqtt_password = config['mqtt']['password']
 base_topic = config['mqtt']['base_topic']
 ac_address = config['unit']['ip']
 
@@ -99,6 +101,10 @@ mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, "daikin_studio")
 mqttClient.on_publish = on_publish
 mqttClient.on_message = on_message
 mqttClient.on_subscribe = on_subscribe
+
+if len(mqtt_username)>0 and len(mqtt_password)>0:
+    mqttClient.username_pw_set(mqtt_username, mqtt_password)
+
 mqttClient.connect(mqtt_server, mqtt_port)
 
 mqttClient.subscribe(base_topic+'/modecommand')

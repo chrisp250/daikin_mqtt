@@ -9,6 +9,8 @@ config.read("daikin.ini")
 
 mqtt_server=config['mqtt']['server']
 mqtt_port=int(config['mqtt']['port'])
+mqqt_username = config['mqtt']['username']
+mqqt_password = config['mqtt']['password']
 base_topic = config['mqtt']['base_topic']
 ac_address = config['unit']['ip']
 
@@ -94,6 +96,7 @@ mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, "daikin_studio")
 mqttClient.on_publish = on_publish
 mqttClient.on_message = on_message
 mqttClient.on_subscribe = on_subscribe
+mqttClient.username_pw_set(mqqt_username, mqqt_password)
 mqttClient.connect(mqtt_server, mqtt_port)
 
 mqttClient.subscribe(base_topic+'/modecommand')

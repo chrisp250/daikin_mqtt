@@ -62,6 +62,7 @@ class Daikin:
         coolingtemp_sp = int(p["p_02"].strip('"'), 16)/2
         heatingtemp_sp = int(p["p_03"].strip('"'), 16)/2
         self.p = p
+        self.e_A002 = e_A002
         #print("Mode:",mode, ", Temperature:", temperature,", Humidity:",humidity,", Cooling setpoint:",coolingtemp_sp," , Heating setpoint:",heatingtemp_sp)
         return True
 
@@ -69,6 +70,8 @@ class Daikin:
     #Process change of mode request
     def switch_mode(self,mode):
         p = self.p
+
+
         match mode:
             case "fan_only":
                 e_3003 = '"00"' # Start command
@@ -102,7 +105,39 @@ class Daikin:
                 e_3003 = '"01"' #Stop command
                 e_A002 = '"00"'
                 print("AC Off")
+        self.e_3003 = e_3003
+        self.e_A002 = e_A002
+        self.p = p
+        self.exec_command() # exec the command after setting the parameters
+    
+    # Set temperature setpoint
+    def set_temp(self,temp):
+        self.e_3003 = '"02"' #setting change
 
+        if self.p["p_01"] == '"0200"': #Cooling temperature change
+            self.p["p_02"] = '"'+'{:02x}'.format(int(float(temp)*2))+'"'
+        elif self.p["p_01"] == '"0100"':     #Heating temperature change
+            self.p["p_03"] = '"'+'{:02x}'.format(int(float(temp)*2))+'"'    
+
+        self.exec_command() #execute the change of temperature
+#    elif args[3] == "CoolingThresholdTemperature":
+#        if p["p_01"] == '"0300"': #If automatic, convert the specified temperature to +- temperature (hexadecimal)
+#            p["p_1F"] = "{:03x}".format(0x100 + int((float(args[4]) - temp)*2))
+#            p["p_1F"] = '"' + p["p_1F"][-2:] + '"'
+#        else: #If it is other than automatic, convert the specified temperature to hexadecimal.
+#            p["p_02"] = '"'+'{:02x}'.format(int(float(args[4])*2))+'"'
+#    elif args[3] == "HeatingThresholdTemperature":
+#        if p["p_01"] == '"0300"': #If automatic, convert the specified temperature to +- temperature (hexadecimal)
+#            p["p_1F"] = "{:03x}".format(0xff +1 + int((float(args[4]) - temp)*2))
+#            p["p_1F"] = '"' + p["p_1F"][-2:] + '"'
+#        else: #If it is other than automatic, convert the specified temperature to hexadecimal.
+#            p["p_03"] = '"'+'{:02x}'.format(int(float(args[4])*2))+'"'
+        
+    
+    def exec_command(self):
+        e_A002 = self.e_A002
+        e_3003 = self.e_3003
+        p = self.p
         match p["p_01"]:
             case '"0000"': #Heating mode
                 self.decode_mode(e_A002,e_3003,p)

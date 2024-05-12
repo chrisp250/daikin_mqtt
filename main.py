@@ -21,8 +21,8 @@ with open(configPath) as f:
 
 mqtt_server=config['mqtt']['server']
 mqtt_port=int(config['mqtt']['port'])
-mqtt_username=config['mqtt']['username']
-mqtt_password=config['mqtt']['password']
+mqtt_username = config['mqtt']['username']
+mqtt_password = config['mqtt']['password']
 base_topic = config['mqtt']['base_topic']
 ac_address = config['unit']['ip']
 

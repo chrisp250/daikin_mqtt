@@ -1,10 +1,10 @@
 {
   "name": "Daikin MQTT",
-  "version": "0.4.22",
+  "version": "0.5.0",
   "slug": "daikin_mqtt",
   "description": "MQTT Server for Daikin Air Conditioners",
   "uart": true,
-  "url": "https://github.com/foxdalas/daikin_mqtt/tree/master/daikin_mqtt",
+  "url": "https://github.com/chrisp250/daikin_mqtt/tree/master/daikin_mqtt",
   "services": [
     "mqtt:need"
   ],
@@ -49,5 +49,5 @@
       "ip": "str?"
     }
   },
-  "image": "foxdalas/daikin-mqtt-{arch}"
+  "image":  "ghcr.io/chrisp250/daikin-mqtt-{arch}"
 }

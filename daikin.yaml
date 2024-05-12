@@ -1,0 +1,9 @@
+general:
+mqtt:
+  server: mqtt://localhost
+  port: 1883
+  base_topic: climate/studio
+  username: 
+  password:
+unit:
+  ip:

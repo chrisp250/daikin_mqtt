@@ -1,0 +1,53 @@
+{
+  "name": "Daikin MQTT",
+  "version": "0.5.0",
+  "slug": "daikin_mqtt",
+  "description": "MQTT Server for Daikin Air Conditioners",
+  "uart": true,
+  "url": "https://github.com/chrisp250/daikin_mqtt/tree/master/daikin_mqtt",
+  "services": [
+    "mqtt:need"
+  ],
+  "arch": [
+    "aarch64",
+    "amd64",
+    "armhf",
+    "armv7",
+    "i386"
+  ],
+  "init": false,
+  "timeout": 30,
+  "map": [
+    "share:rw",
+    "addon_config:rw"
+  ],
+  "options": {
+    "general": {},
+    "mqtt": {
+      "server": "127.0.0.1",
+      "port": 1883,
+      "basic_topic": "climate/studio",
+      "username": "",
+      "password": ""
+    },
+    "unit": {
+      "ip": ""
+    }
+  },
+  "schema": {
+    "general": {},
+    "mqtt": {
+      "server": "str?",
+      "ca": "str?",
+      "key": "str?",
+      "cert": "str?",
+      "username": "str?",
+      "password": "str?",
+      "basic_topic": "str?"
+    },
+    "unit": {
+      "ip": "str?"
+    }
+  },
+  "image":  "ghcr.io/chrisp250/daikin-mqtt-{arch}"
+}

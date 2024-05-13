@@ -18,8 +18,9 @@ mqtt:
   username: ''
   password: ''
   port: 1883
-unit:
-  ip:
+units:
+  - name:
+    address:
 EOF
 fi
 

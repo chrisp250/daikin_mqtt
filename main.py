@@ -23,15 +23,14 @@ mqtt_server=config['mqtt']['server']
 mqtt_port=int(config['mqtt']['port'])
 mqtt_username = config['mqtt']['username']
 mqtt_password = config['mqtt']['password']
-base_topic = config['mqtt']['base_topic']
-ac_address = config['unit']['ip']
+units = config['units']
 
-if ac_address is None:
-    print("AC IP address is not set in config file")
+if units[0]["name"] is None or units[0]["address"] is None:
+    print("Unit name or address is not set in config file")
     sys.exit(1)
 
 #Define Daikin class
-aircon = daikin.Daikin(ac_address)
+#aircon = daikin.Daikin(ac_address)
 
 #Publish succeeded
 def on_publish(client, userdata, mid, reason_code, properties):
@@ -50,10 +49,10 @@ def on_subscribe(client, userdata, mid, reason_code_list, properties):
         exit
 
 #Message received
-def on_message(client, userdata, message):
+def on_message(client, userdata, message, topic):
 
     #print("Topic:", message.topic," Payload:",message.payload)
-    if message.topic == (base_topic+'/modecommand'): #Is it a mode change message
+    if message.topic == (topic+'/modecommand'): #Is it a mode change message
         print ("Set mode:",str(message.payload.decode("utf-8")))
         match str(message.payload.decode("utf-8")):
             case "cool":
@@ -68,13 +67,13 @@ def on_message(client, userdata, message):
                 aircon.switch_mode("auto")
             case "off":
                 aircon.switch_mode("off")
-    elif message.topic == (base_topic+'/temperaturecommand'): #Is it a temperature change message
+    elif message.topic == (topic+'/temperaturecommand'): #Is it a temperature change message
         print ("Set temperature:",str(message.payload.decode("utf-8")))
         aircon.set_temp(message.payload.decode("utf-8"))
 #    update_request()
 
 #Request an update on AC status
-def update_request():
+def update_request(aircon, topic):
     while not aircon.get_status():
         time.sleep(30) #Wait if can't connect to AC unit and retry
     #print("Polling...")
@@ -83,27 +82,27 @@ def update_request():
     # Topic names, Client ID, Usernames and Passwords are encoded as stream of bytes using UTF-8.
     msg = aircon.mode
     info = mqttClient.publish(
-        topic=base_topic+'/mode',
+        topic=topic+'/mode',
         payload=msg.encode('utf-8'),
         qos=0,
     )
     info = mqttClient.publish(
-        topic=base_topic+'/temperature',
+        topic=topic+'/temperature',
         payload=aircon.temperature,
         qos=0,
     )
     info = mqttClient.publish(
-        topic=base_topic+'/temperaturesp',
+        topic=topic+'/temperaturesp',
         payload=aircon.temperaturesp,
         qos=0,
     )
     info = mqttClient.publish(
-        topic=base_topic+'/humidity',
+        topic=topic+'/humidity',
         payload=aircon.humidity,
         qos=0,
     )
     info = mqttClient.publish(
-        topic=base_topic+'/fanmode',
+        topic=topic+'/fanmode',
         payload=aircon.fanmode,
         qos=0,
     )
@@ -113,7 +112,13 @@ def update_request():
     #print(info.is_published())
 
 
-mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, "daikin_studio")
+
+#Air conditioners and topics
+aircons = list()
+topics = list()
+
+# Initialize mqttClient
+mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, "daikin_mqtt")
 mqttClient.on_publish = on_publish
 mqttClient.on_message = on_message
 mqttClient.on_subscribe = on_subscribe
@@ -123,11 +128,19 @@ if mqtt_username is not None and mqtt_password is not None:
 
 mqttClient.connect(mqtt_server, mqtt_port)
 
-mqttClient.subscribe(base_topic+'/modecommand')
-mqttClient.subscribe(base_topic+'/temperaturecommand')
+# Subscribe to topics and Daikin client
+for unit in units:
+    mqttClient.subscribe("climate" + "/" + unit["name"] + "/" + "modecommand")
+    mqttClient.subscribe("climate" + "/" + unit["name"] + "/" +'/temperaturecommand')
+
+    aircons.append(daikin.Daikin(unit["address"]))
+    topics.append("climate" + "/" + unit["name"])
+
 # start a new thread
 mqttClient.loop_start()
 
 while True:
-    update_request()
+    for aircon in aircons:
+        update_request(aircon, topics[aircons.index(aircon)])
+
     time.sleep(30)

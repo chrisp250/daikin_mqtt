@@ -25,6 +25,24 @@ Run the image:
 - Update the daikin.ini file to suit your install
 - `docker run -d -v $(pwd)/daikin.ini:/usr/src/app/daikin.ini daikin_mqtt`
 
+# Example Daikin MQTT config
+```
+general:
+mqtt:
+  server: localhost
+  port: 1883
+  username: mqtt_user
+  password: mqtt_password
+units:
+  - name: studio
+    address: 192.168.1.101
+```
+* `general` section is not used at the moment
+* `mqtt` section is used to configure the MQTT client
+* `units` section is used to configure the Daikin units to be monitored
+
+MQTT topics have the following format: `climate/<unit_name>/<topic>` for example `climate/studio/temperature`
+
 # Sample MQTT config in Home Assistant
 ```
 mqtt:

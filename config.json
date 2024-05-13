@@ -30,9 +30,7 @@
       "username": "",
       "password": ""
     },
-    "unit": {
-      "ip": ""
-    }
+    "units": []
   },
   "schema": {
     "general": {},
@@ -45,9 +43,12 @@
       "password": "str?",
       "basic_topic": "str?"
     },
-    "unit": {
-      "ip": "str?"
-    }
+    "units": [
+      {
+        "name": "str?",
+        "address": "str?"
+      }
+    ]
   },
   "image":  "ghcr.io/chrisp250/daikin-mqtt-{arch}"
 }

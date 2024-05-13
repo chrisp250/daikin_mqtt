@@ -1,9 +1,10 @@
 general:
 mqtt:
-  server: mqtt://localhost
+  server: localhost
   port: 1883
-  base_topic: climate/studio
-  username: 
+  username:
   password:
-unit:
-  ip:
+units:
+  - name: studio
+    address:
+

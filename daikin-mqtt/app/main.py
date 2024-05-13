@@ -1,40 +1,25 @@
 import time
+import re
+
 import paho.mqtt.client as mqtt
 import yaml
 import daikin
+import config
 import os
 import sys
 
 # Check CONFIG_PATH environment variable
-if 'CONFIG_PATH' in os.environ:
-    print("CONFIG_PATH environment variable is set to:", os.environ['CONFIG_PATH'])
-    configPath = os.environ['CONFIG_PATH']
-else:
-    print("CONFIG_PATH environment variable is not set. Using default config...")
-    configPath = "daikin.yaml"
 
-print("Starting Daikin MQTT with config:", configPath)
+print("Starting Daikin MQTT")
 
 #Configuration file reader
-with open(configPath) as f:
-    config = yaml.load(f, Loader=yaml.FullLoader)
+config = config.Config().getConfig()
 
-mqtt_server=config['mqtt']['server']
-mqtt_port=int(config['mqtt']['port'])
-mqtt_username = config['mqtt']['username']
-mqtt_password = config['mqtt']['password']
-units = config['units']
-
-if units[0]["name"] is None or units[0]["address"] is None:
-    print("Unit name or address is not set in config file")
-    sys.exit(1)
-
-#Define Daikin class
-#aircon = daikin.Daikin(ac_address)
+print("Loaded configuration:", config)
 
 #Publish succeeded
 def on_publish(client, userdata, mid, reason_code, properties):
-#    print("sent a message")
+    #    print("sent a message")
     exit
 
 # Subscribed to a new topic
@@ -49,16 +34,15 @@ def on_subscribe(client, userdata, mid, reason_code_list, properties):
         exit
 
 #Message received
-def on_message(client, userdata, message, topic):
-
+def on_message(client, userdata, message):
     #print("Topic:", message.topic," Payload:",message.payload)
-    if message.topic == (topic+'/modecommand'): #Is it a mode change message
+    if "modecommand" in message.topic:
         print ("Set mode:",str(message.payload.decode("utf-8")))
         match str(message.payload.decode("utf-8")):
             case "cool":
                 aircon.switch_mode("cool")
             case "dry":
-                 aircon.switch_mode("dry")
+                aircon.switch_mode("dry")
             case "heat":
                 aircon.switch_mode("heat")
             case "fan_only":
@@ -67,7 +51,7 @@ def on_message(client, userdata, message, topic):
                 aircon.switch_mode("auto")
             case "off":
                 aircon.switch_mode("off")
-    elif message.topic == (topic+'/temperaturecommand'): #Is it a temperature change message
+    elif "temperaturecommand" in message.topic: #Is it a temperature change message
         print ("Set temperature:",str(message.payload.decode("utf-8")))
         aircon.set_temp(message.payload.decode("utf-8"))
 #    update_request()
@@ -123,13 +107,17 @@ mqttClient.on_publish = on_publish
 mqttClient.on_message = on_message
 mqttClient.on_subscribe = on_subscribe
 
-if mqtt_username is not None and mqtt_password is not None:
-    mqttClient.username_pw_set(mqtt_username, mqtt_password)
+if config["mqtt"]["username"] is not None and config["mqtt"]["password"] is not None:
+    mqttClient.username_pw_set(config["mqtt"]["username"], config["mqtt"]["password"])
 
-mqttClient.connect(mqtt_server, mqtt_port)
+try:
+    mqttClient.connect(config["mqtt"]["server"], config["mqtt"]["port"])
+except TimeoutError:
+    print("Connection to MQTT broker timed out")
+
 
 # Subscribe to topics and Daikin client
-for unit in units:
+for unit in config["units"]:
     mqttClient.subscribe("climate" + "/" + unit["name"] + "/" + "modecommand")
     mqttClient.subscribe("climate" + "/" + unit["name"] + "/" +'/temperaturecommand')
 

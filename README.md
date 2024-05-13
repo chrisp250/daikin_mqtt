@@ -2,13 +2,18 @@
 I developed this integration to get my AC to work again with Home Assistant after Daikin upgraded the firmware to 2.8.0 and the native integration no longer works.  
 This is fairly basic at the moment but I'm hoping it fills the gap while a more polished solution is available
 
+# Installation Home Assistant (simple)
 [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fchrisp250%2Fdaikin_mqtt)
+1. Add reposotory to Home Assistant (clink on the badge above)
+2. Go to Settings -> Add-on Store -> ADD-ON Store -> Daikin MQTT -> Install
+3. Change configuration in `/config/daikin-mqtt/configuration.yaml`
+4. Start the add-on
 
-
-# Requirements
-These python packages are required for the code to work:
-`paho-mqtt`
-`requests`
+# Installation Home Assistant (manual)
+1. Go to Settings -> Add-on Store -> 3 dots -> Repositories -> Add repository -> Enter `https://github.com/chrisp250/daikin_mqtt` -> Add
+2. Go to Settings -> Add-on Store -> ADD-ON Store -> Daikin MQTT -> Install
+3. Change configuration in `/config/daikin-mqtt/configuration.yaml`
+4. Start the add-on
 
 # Installation
 Installation steps are very simple:
@@ -26,6 +31,7 @@ Run the image:
 - `docker run -d -v $(pwd)/daikin.ini:/usr/src/app/daikin.ini daikin_mqtt`
 
 # Example Daikin MQTT config
+You can find configuration in the `/config/daikin-mqtt/configuration.yaml`
 ```
 general:
 mqtt:

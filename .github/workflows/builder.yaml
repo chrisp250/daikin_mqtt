@@ -31,7 +31,7 @@ jobs:
         id: info
         uses: home-assistant/actions/helpers/info@master
         with:
-          path: "./"
+          path: "daikin-mqtt"
 
       - name: Check if add-on should be built
         id: check
@@ -68,6 +68,6 @@ jobs:
           args: |
             ${{ env.BUILD_ARGS }} \
             --${{ matrix.arch }} \
-            --target /data \
+            --target daikin-mqtt \
             --image "${{ steps.check.outputs.image }}" \
             --docker-hub "ghcr.io/${{ github.repository_owner }}"

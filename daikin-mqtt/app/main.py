@@ -1,4 +1,6 @@
 import time
+import re
+
 import paho.mqtt.client as mqtt
 import yaml
 import daikin
@@ -32,10 +34,9 @@ def on_subscribe(client, userdata, mid, reason_code_list, properties):
         exit
 
 #Message received
-def on_message(client, userdata, message, topic):
-
+def on_message(client, userdata, message):
     #print("Topic:", message.topic," Payload:",message.payload)
-    if message.topic == (topic+'/modecommand'): #Is it a mode change message
+    if "modecommand" in message.topic:
         print ("Set mode:",str(message.payload.decode("utf-8")))
         match str(message.payload.decode("utf-8")):
             case "cool":
@@ -50,7 +51,7 @@ def on_message(client, userdata, message, topic):
                 aircon.switch_mode("auto")
             case "off":
                 aircon.switch_mode("off")
-    elif message.topic == (topic+'/temperaturecommand'): #Is it a temperature change message
+    elif "temperaturecommand" in message.topic: #Is it a temperature change message
         print ("Set temperature:",str(message.payload.decode("utf-8")))
         aircon.set_temp(message.payload.decode("utf-8"))
 #    update_request()

@@ -1,12 +1,4 @@
----
-name: Release Drafter
+template: |
+  ## What's Changed
 
-# yamllint disable-line rule:truthy
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  workflows:
-    uses: hassio-addons/workflows/.github/workflows/release-drafter.yaml@main
+  $CHANGES

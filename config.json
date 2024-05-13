@@ -18,37 +18,7 @@
   "init": false,
   "timeout": 30,
   "map": [
-    "share:rw",
-    "addon_config:rw"
+    "config:rw"
   ],
-  "options": {
-    "general": {},
-    "mqtt": {
-      "server": "127.0.0.1",
-      "port": 1883,
-      "basic_topic": "climate/studio",
-      "username": "",
-      "password": ""
-    },
-    "units": []
-  },
-  "schema": {
-    "general": {},
-    "mqtt": {
-      "server": "str?",
-      "ca": "str?",
-      "key": "str?",
-      "cert": "str?",
-      "username": "str?",
-      "password": "str?",
-      "basic_topic": "str?"
-    },
-    "units": [
-      {
-        "name": "str?",
-        "address": "str?"
-      }
-    ]
-  },
   "image":  "ghcr.io/chrisp250/daikin-mqtt-{arch}"
 }

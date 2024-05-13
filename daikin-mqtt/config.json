@@ -18,7 +18,7 @@
   "init": false,
   "timeout": 30,
   "map": [
-    "config:rw"
+    "homeassistant_config:rw"
   ],
   "image":  "ghcr.io/chrisp250/daikin-mqtt-{arch}"
 }

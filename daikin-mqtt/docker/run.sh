@@ -1,6 +1,6 @@
 #!/usr/bin/env bashio
 
-export DAIKIN_MQTT_DATA="/config/daikin-mqtt"
+export DAIKIN_MQTT_DATA="/homeassistant/daikin-mqtt"
 
 if ! bashio::fs.file_exists "$DAIKIN_MQTT_DATA/configuration.yaml"; then
   mkdir -p "$DAIKIN_MQTT_DATA" || bashio::exit.nok "Could not create $DAIKIN_MQTT_DATA"
